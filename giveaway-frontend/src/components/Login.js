@@ -1,51 +1,50 @@
-import React, { useState } from 'react';
-import { loginUser } from '../api/api';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Homepage.css'; // Reuse the CSS from Homepage for consistent styling
+import logo from './logo.png'; // Import your logo image
 
 const Login = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
-    const [message, setMessage] = useState('');
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await loginUser(formData);
-            localStorage.setItem('token', response.data.token);
-            setMessage('Login successful!');
-        } catch (error) {
-            setMessage(error.response?.data?.message || 'Something went wrong');
-        }
-    };
-
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
-                <button type="submit">Login</button>
-            </form>
-            {message && <p>{message}</p>}
+        <div className="homepage-container">
+            <nav className="navbar">
+                <div className="logo-container">
+                    <img src={logo} alt="Logo" className="logo-image" />
+                    <div className="logo-text">Giveaway Platform</div>
+                </div>
+                <div className="nav-links">
+                    <Link to="/login" className="nav-link">Login</Link>
+                    <Link to="/register" className="nav-link">Register</Link>
+                </div>
+            </nav>
+
+            <header className="header">
+                <h1>Welcome Back!</h1>
+                <p>Please login to continue</p>
+            </header>
+
+            <div className="form-container">
+                <form className="login-form">
+                    <label className="form-label" htmlFor="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        className="form-input"
+                        placeholder="Enter your email"
+                        required
+                    />
+
+                    <label className="form-label" htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        className="form-input"
+                        placeholder="Enter your password"
+                        required
+                    />
+
+                    <button type="submit" className="form-button">Login</button>
+                </form>
+            </div>
         </div>
     );
 };
