@@ -16,13 +16,19 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
+        // Check if username or email already exists
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username or Email already exists' });
+        }
+
         // Create a new user
         const newUser = new User({ username, email, password });
         await newUser.save();
 
-        res.status(201).json({ message: 'User created successfully', user: newUser });
+        res.status(201).json({ message: 'User registered successfully', user: newUser });
     } catch (error) {
-        console.error('Error creating user:', error.message);
+        console.error('Error registering user:', error.message);
         res.status(500).json({ error: error.message });
     }
 });
