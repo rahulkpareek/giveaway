@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { registerUser } from '../api/api';
+import { Link, useNavigate } from 'react-router-dom';
+import { registerUser } from '../api/api'; // Ensure this function handles the API call
 import './Homepage.css'; // Reuse the CSS for consistent styling
 import logo from './logo.png';
 
@@ -12,6 +12,7 @@ const Register = () => {
     });
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
+    const navigate = useNavigate(); // Use to redirect after registration
 
     const validate = () => {
         const newErrors = {};
@@ -36,7 +37,15 @@ const Register = () => {
 
         try {
             const response = await registerUser(formData);
-            setMessage(response.data.message);
+
+            // Save the token in local storage
+            localStorage.setItem('token', response.data.token);
+
+            // Set success message
+            setMessage('Registration successful! Redirecting...');
+
+            // Redirect to dashboard or login
+            setTimeout(() => navigate('/dashboard'), 2000);
         } catch (error) {
             setMessage(error.response?.data?.error || 'Something went wrong');
         }
@@ -100,7 +109,7 @@ const Register = () => {
 
                     <button type="submit" className="form-button">Register</button>
                 </form>
-                {message && <p className="success-message">{message}</p>}
+                {message && <p className={message.includes('successful') ? 'success-message' : 'error-text'}>{message}</p>}
             </div>
         </div>
     );
