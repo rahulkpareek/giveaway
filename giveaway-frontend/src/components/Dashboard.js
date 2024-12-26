@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Dashboard.css'; // Add styles specific to Dashboard
+import './Homepage.css';
 import axios from 'axios';
 
 const Dashboard = () => {
@@ -28,7 +28,7 @@ const Dashboard = () => {
     }, [navigate]);
 
     return (
-        <div className="dashboard-container">
+        <div className="homepage-container">
             <nav className="navbar">
                 <div className="logo-container">
                     <div className="logo-text">Giveaway Dashboard</div>
