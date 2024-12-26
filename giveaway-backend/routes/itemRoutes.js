@@ -4,7 +4,7 @@ const Item = require('../models/Item');
 const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// Get all items for the logged-in user
+// Get all items for a logged-in user
 router.get('/my-items', protect, async (req, res) => {
     try {
         const items = await Item.find({ user: req.user._id }); // Fetch items belonging to the logged-in user
