@@ -1,35 +1,40 @@
 // Import required modules
 const express = require('express');
 const Item = require('../models/Item');
-const { protect } = require('../middleware/authMiddleware'); // Middleware for authentication
-
+const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// Get all items
-router.get('/', async (req, res) => {
+// Get all items for a logged-in user
+router.get('/my-items', protect, async (req, res) => {
     try {
-        const items = await Item.find().populate('user', 'name email'); // Populate user details
-        res.json(items);
+        const items = await Item.find({ user: req.user._id }); // Fetch items belonging to the logged-in user
+        res.status(200).json(items);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error fetching user items:', error.message);
+        res.status(500).json({ error: error.message });
     }
 });
 
 // Create a new item
 router.post('/', protect, async (req, res) => {
-    const { name, description, image } = req.body;
     try {
-        const item = await Item.create({
-            name,
+        const { title, description, image } = req.body;
+
+        // Create and save the item
+        const newItem = new Item({
+            title,
             description,
             image,
-            user: req.user.id,
+            user: req.user._id, 
+            username: req.user.username, 
         });
-        res.status(201).json(item);
+
+        await newItem.save();
+        res.status(201).json({ message: 'Item created successfully', item: newItem });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error creating item:', error.message);
+        res.status(500).json({ error: error.message });
     }
 });
 
 module.exports = router;
-
