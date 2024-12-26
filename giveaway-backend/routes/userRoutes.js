@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { validateRegistration, validateLogin } = require('../middleware/validateInput');
+const { protect } = require('../middleware/authmiddleware');
 const generateToken = require('../utils/generateToken');
 
 const router = express.Router();
@@ -66,6 +67,19 @@ router.post('/login', validateLogin, async (req, res) => {
     } catch (error) {
         console.error('Error logging in:', error.message);
         res.status(500).json({ error: 'Server login error' });
+    }
+});
+
+router.get('/profile', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('username');
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json({ username: user.username });
+    } catch (error) {
+        console.error('Error fetching user profile:', error.message);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
