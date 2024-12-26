@@ -30,7 +30,7 @@ const Login = () => {
 
             // Set success message and redirect
             setMessage('Login successful! Redirecting...');
-            setTimeout(() => navigate('/items'), 2000); // Redirect to all listed items
+            setTimeout(() => navigate('/dashboard'), 2000); // Redirect to all listed items
         } catch (err) {
             // Handle errors
             setError(err.response?.data?.error || 'Something went wrong');

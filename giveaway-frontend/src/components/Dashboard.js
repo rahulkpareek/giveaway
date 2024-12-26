@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Homepage.css';
+import './Homepage.css'; 
 import axios from 'axios';
 
 const Dashboard = () => {
     const [items, setItems] = useState([]);
+    const [username, setUsername] = useState(''); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,6 +14,18 @@ const Dashboard = () => {
         if (!token) {
             navigate('/login'); // Redirect to login if not authenticated
         } else {
+            // Fetch user profile
+            axios
+                .get('http://localhost:5000/api/users/profile', {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                .then((response) => {
+                    setUsername(response.data.username); // Set username from response
+                })
+                .catch((error) => {
+                    console.error('Error fetching user profile:', error);
+                });
+
             // Fetch user items
             axios
                 .get('http://localhost:5000/api/items/my-items', {
@@ -46,29 +59,46 @@ const Dashboard = () => {
                 </div>
             </nav>
 
-            <header className="header">
-                <h1>Your Items</h1>
-                <p>Below are the items you've shared.</p>
-            </header>
+            <div className="dashboard-content">
+                {/* Left Pane: User Profile */}
+                <div className="profile-pane">
+                    <h2 className="profile-title">User Profile</h2>
+                    <p className="profile-username">{username}</p>
+                </div>
 
-            <div className="items-list">
-                {items.length > 0 ? (
-                    <ul className="items-grid">
-                        {items.map((item) => (
-                            <li key={item._id} className="item-card">
-                                <img
-                                    src={item.image || 'https://via.placeholder.com/150'}
-                                    alt={item.title}
-                                    className="item-image"
-                                />
-                                <h3>{item.title}</h3>
-                                <p className="item-description">{item.description}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No items found. Add some items to get started!</p>
-                )}
+                {/* Main Content: Items List */}
+                <div className="main-content">
+                    <header className="header">
+                        <h1>Your Items</h1>
+                        <p>Below are the items you've shared.</p>
+                        <button
+                            className="add-item-button"
+                            onClick={() => navigate('/new-item')}
+                        >
+                            Add New Item
+                        </button>
+                    </header>
+
+                    <div className="items-list">
+                        {items.length > 0 ? (
+                            <ul className="items-grid">
+                                {items.map((item) => (
+                                    <li key={item._id} className="item-card">
+                                        <img
+                                            src={item.image || 'https://via.placeholder.com/150'}
+                                            alt={item.title}
+                                            className="item-image"
+                                        />
+                                        <h3>{item.title}</h3>
+                                        <p className="item-description">{item.description}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No items found. Add some items to get started!</p>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );

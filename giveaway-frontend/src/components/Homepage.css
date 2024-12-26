@@ -268,3 +268,48 @@ body {
     text-align: center;
 }
 
+.dashboard-content {
+    display: flex;
+    margin-top: 20px;
+}
+
+.profile-pane {
+    width: 20%;
+    background-color: #f8f9fa;
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: left;
+    margin-right: 20px;
+}
+
+.profile-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #2c662d;
+}
+
+.profile-username {
+    font-size: 16px;
+    color: #2c662d;
+}
+
+.main-content {
+    width: 80%;
+}
+
+.add-item-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.add-item-button:hover {
+    background-color: #1e7c32;
+}
